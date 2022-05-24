@@ -1,38 +1,61 @@
 ﻿using DataAccess.Abstract;
 using Entities.Concrete;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EFProductDal : IProductDal
+    public class EfProductDal : IProductDal
     {
-        public void Add(Product product)
+        public void Add(Product entity)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public void Delete(Product product)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public List<Product> GetAll()
-        {
-            return new List<Product>()
+            using (NorthwindContext context = new NorthwindContext())
             {
-                new Product { ProductId = 100, CategoryId = 100, ProductName = "A", UnitPrice = 1000, UnitsInStock = 1000 },
-                new Product { ProductId = 200, CategoryId = 200, ProductName = "B", UnitPrice = 2000, UnitsInStock = 2000 }
-            };
+                Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<Product> addedEntity = context.Entry(entity);
+                addedEntity.State = EntityState.Added;
+                context.SaveChanges();
+            }
         }
 
-        public List<Product> GetAllByCategory(int categoryId)
+        public void Delete(Product entity)
         {
-            throw new System.NotImplementedException();
+            using (NorthwindContext context = new NorthwindContext())
+            {
+                Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<Product> deletedEntity = context.Entry(entity);
+                deletedEntity.State = EntityState.Deleted;
+                context.SaveChanges();
+            }
         }
 
-        public void Update(Product product)
+        public Product Get(Expression<Func<Product, bool>> filter)
         {
-            throw new System.NotImplementedException();
+            using (NorthwindContext context = new NorthwindContext())
+            {
+                return context.Set<Product>().SingleOrDefault(filter);
+            }
+        }
+
+        public List<Product> GetAll(Expression<Func<Product, bool>> filter = null)
+        {
+            using (NorthwindContext context = new NorthwindContext())
+            {
+                return filter == null
+                    ? context.Set<Product>().ToList()
+                    : context.Set<Product>().Where(filter).ToList();
+            }
+        }
+
+        public void Update(Product entity)
+        {
+            using (NorthwindContext context = new NorthwindContext())
+            {
+                Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<Product> updatedEntity = context.Entry(entity);
+                updatedEntity.State = EntityState.Modified;
+                context.SaveChanges();
+            }
         }
     }
 }
