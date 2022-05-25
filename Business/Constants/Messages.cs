@@ -1,7 +1,4 @@
-﻿using Entities.Concrete;
-using System.Collections.Generic;
-
-namespace Business.Constants
+﻿namespace Business.Constants
 {
     public static class Messages
     {
