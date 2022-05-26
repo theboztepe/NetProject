@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
@@ -48,6 +49,7 @@ namespace Business.Concrete
             return new SuccessDataResult<List<ProductDetailDto>>(_productDal.GetProductDetails());
         }
 
+        [SecuredOperation("product.add,admin")]
         [ValidationAspect(typeof(ProductValidator), Priority = 1)]
         public IResult Add(Product product)
         {
@@ -84,7 +86,7 @@ namespace Business.Concrete
         private IResult CheckIfProductNameOfCorrect(string ProductName)
         {
             bool result = _productDal.GetAll(p => p.ProductName == ProductName).Any();
-            if (!result)
+            if (result)
             {
                 return new ErrorResult(Messages.ProductNameAlreadyExists);
             }

@@ -16,15 +16,15 @@ namespace WebAPI
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
             return Host.CreateDefaultBuilder(args)
-                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-                .ConfigureContainer<ContainerBuilder>(builder =>
-                {
-                    builder.RegisterModule(new AutofacBusinessModule());
-                })
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+             .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+             .ConfigureContainer<ContainerBuilder>(builder =>
+             {
+                 builder.RegisterModule(new AutofacBusinessModule());
+             })
+             .ConfigureWebHostDefaults(webBuilder =>
+             {
+                 webBuilder.UseStartup<Startup>();
+             });
         }
     }
 }
